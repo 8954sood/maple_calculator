@@ -17,6 +17,7 @@ const toggleTheme = () => {
         <ul>
           <li :class="{active: $route.name === 'main'}"><router-link to="/">거래 분석</router-link></li>
           <li :class="{active: $route.name === 'calc'}"><router-link to="/calc">가성비 계산기</router-link></li>
+          <li :class="{active: $route.name === 'chart'}"><router-link to="/chart">거래 그래프</router-link></li>
         </ul>
       </nav>
     </aside>
@@ -88,12 +89,10 @@ const toggleTheme = () => {
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 1.2rem 0.8rem 1.2rem;
-  max-width: 650px;
   margin: 0 auto;
   font-size: 1.5rem;
 }
 .main-content {
-  max-width: 650px;
   margin: 0 auto;
   padding: 0 1.2rem 1.5rem 1.2rem;
 }

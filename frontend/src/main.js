@@ -6,6 +6,7 @@ import { createStore } from 'vuex'
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from './pages/MainPage.vue'
 import CalcPage from './pages/CalcPage.vue'
+import ChartPage from './pages/ChartPage.vue'
 
 const store = createStore({
   state() {
@@ -22,7 +23,8 @@ const store = createStore({
 
 const routes = [
   { path: '/', name: 'main', component: MainPage },
-  { path: '/calc', name: 'calc', component: CalcPage }
+  { path: '/calc', name: 'calc', component: CalcPage },
+  { path: '/chart', name: 'chart', component: ChartPage }
 ]
 const router = createRouter({
   history: createWebHistory(),
