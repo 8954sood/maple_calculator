@@ -14,27 +14,26 @@ const chartRef = ref(null)
 let chartInstance = null
 
 const fetchData = async () => {
-  // 날짜별 집계 데이터 가져오기 (최근 30일)
+  // 최근 30일 날짜 계산
   const today = new Date()
-  const days = Array.from({length: 30}, (_, i) => {
-    const d = new Date(today)
-    d.setDate(today.getDate() - (29 - i))
-    return d.toISOString().slice(0, 10)
-  })
-  const labels = []
-  const profits = []
-  const sells = []
-  const buys = []
-  const rates = []
-  for (const date of days) {
-    const summary = (await axios.get(`/summary/${date}`)).data
-    labels.push(date)
-    profits.push(summary.profit)
-    sells.push(summary.total_sell)
-    buys.push(summary.total_buy)
-    rates.push(summary.profit_rate)
+  const start = new Date(today)
+  start.setDate(today.getDate() - 29)
+  const startStr = start.toISOString().slice(0, 10)
+  const endStr = today.toISOString().slice(0, 10)
+  // API 한 번에 요청
+  const res = await axios.get(`/summary/range?start=${startStr}&end=${endStr}`)
+  const data = res.data
+  const labels = [], profits = [], sells = [], buys = [], rates = [];
+
+  for (const d of data) {
+    labels.push(d.date);
+    profits.push(d.profit);
+    sells.push(d.total_sell);
+    buys.push(d.total_buy);
+    rates.push(d.profit_rate);
   }
-  return { labels, profits, sells, buys, rates }
+
+  return { labels, profits, sells, buys, rates };
 }
 
 const renderChart = async () => {
