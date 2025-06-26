@@ -53,6 +53,10 @@
         <label>씨앗 오일 대신 씨앗 사용</label>
         <input type="checkbox" v-model="useSeed" />
       </div>
+      <div class="row" v-if="useSeed">
+        <label>10% 실패 확률 반영</label>
+        <input type="checkbox" v-model="useFailProb" />
+      </div>
       <div class="row">
         <button type="submit">순수익 계산</button>
       </div>
@@ -80,6 +84,7 @@ const unitSeed = ref(10000)
 const unitCrystal = ref(10000)
 const unitStone = ref(10000)
 const useSeed = ref(false)
+const useFailProb = ref(false)
 const result = ref(null)
 
 const STORAGE_KEY = 'maple-calc-inputs-v1'
@@ -87,7 +92,7 @@ const STORAGE_KEY = 'maple-calc-inputs-v1'
 // 입력값 저장
 watch([
   type, pricePotion, priceOil, priceSeed, priceCrystal, priceStone,
-  unitPotion, unitOil, unitSeed, unitCrystal, unitStone, useSeed
+  unitPotion, unitOil, unitSeed, unitCrystal, unitStone, useSeed, useFailProb
 ], () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     type: type.value,
@@ -101,7 +106,8 @@ watch([
     unitSeed: unitSeed.value,
     unitCrystal: unitCrystal.value,
     unitStone: unitStone.value,
-    useSeed: useSeed.value
+    useSeed: useSeed.value,
+    useFailProb: useFailProb.value
   }))
 }, { deep: true })
 
@@ -123,6 +129,7 @@ onMounted(() => {
       unitCrystal.value = data.unitCrystal ?? 10000
       unitStone.value = data.unitStone ?? 10000
       useSeed.value = data.useSeed ?? false
+      useFailProb.value = data.useFailProb ?? false
     } catch {}
   }
 })
@@ -144,7 +151,8 @@ const calcProfit = () => {
   // 오일 대신 씨앗 사용 시
   let oilCost = 0
   if (useSeed.value) {
-    oilCost = seedPrice * 6 * oilCount
+    const seedPerOil = useFailProb.value ? (6 / 0.9) : 6
+    oilCost = seedPrice * seedPerOil * oilCount
   } else {
     oilCost = oilPrice * oilCount
   }
