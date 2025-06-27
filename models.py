@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Enum
+from sqlalchemy import Column, Integer, String, Date, Enum, Float
 from sqlalchemy.ext.declarative import declarative_base
 import enum
 from datetime import date
@@ -17,4 +17,5 @@ class Trade(Base):
     quantity = Column(Integer, nullable=False)      # 수량
     price = Column(Integer, nullable=False)         # 가격(실제 메소 단위)
     price_unit = Column(Integer, nullable=False)    # 입력 단위(1 또는 10000)
-    date = Column(Date, default=date.today, nullable=False)  # 거래 날짜 
+    date = Column(Date, default=date.today, nullable=False)  # 거래 날짜
+    fee_rate = Column(Float, default=5.0, nullable=False)    # 거래 수수료율(%) 

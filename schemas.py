@@ -9,6 +9,7 @@ class TradeCreate(BaseModel):
     price: int
     price_unit: int  # 1 또는 10000
     date: date
+    fee_rate: float = 5.0
 
 class TradeRead(BaseModel):
     id: int
@@ -18,6 +19,7 @@ class TradeRead(BaseModel):
     price: int
     price_unit: int
     date: date
+    fee_rate: float
 
     class Config:
         orm_mode = True 

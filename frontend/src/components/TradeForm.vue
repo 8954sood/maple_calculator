@@ -14,6 +14,12 @@
         <option :value="1">1의 자리</option>
         <option :value="10000">만 단위</option>
       </select>
+      <template v-if="type === 'sell'">
+        <select v-model.number="feeRate">
+          <option :value="5">수수료 5% (기본)</option>
+          <option :value="3">수수료 3% (MVP/PC방)</option>
+        </select>
+      </template>
     </div>
     <div class="row">
       <input v-model="date" type="date" required />
@@ -29,8 +35,9 @@ import axios from 'axios'
 const type = ref('sell')
 const title = ref('')
 const quantity = ref(1)
-const price = ref()
+const price = ref(1)
 const priceUnit = ref(10000)
+const feeRate = ref(5)
 const date = ref(new Date().toISOString().slice(0, 10))
 
 const submitTrade = async () => {
@@ -40,12 +47,15 @@ const submitTrade = async () => {
     quantity: quantity.value,
     price: price.value,
     price_unit: priceUnit.value,
-    date: date.value
+    date: date.value,
+    fee_rate: type.value === 'sell' ? feeRate.value : 0
   })
   // 입력값 초기화
   title.value = ''
   quantity.value = 1
+  price.value = 1
   priceUnit.value = 10000
+  feeRate.value = 5
   // 새로고침 이벤트 발생 (분석 컴포넌트에 알림)
   window.dispatchEvent(new Event('trade-updated'))
 }
@@ -61,7 +71,7 @@ const submitTrade = async () => {
   padding: 1.2rem 1.2rem;
   margin-bottom: 1.2rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  max-width: 650px;
+  min-width: 900px;
   margin: 1.2rem auto;
   font-size: 1rem;
 }

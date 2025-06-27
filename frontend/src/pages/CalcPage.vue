@@ -50,6 +50,13 @@
         </select>
       </div>
       <div class="row">
+        <label>수수료율</label>
+        <select v-model.number="feeRate">
+          <option :value="5">수수료 5% (기본)</option>
+          <option :value="3">수수료 3% (MVP/PC방)</option>
+        </select>
+      </div>
+      <div class="row">
         <label>씨앗 오일 대신 씨앗 사용</label>
         <input type="checkbox" v-model="useSeed" />
       </div>
@@ -83,6 +90,7 @@ const unitOil = ref(10000)
 const unitSeed = ref(10000)
 const unitCrystal = ref(10000)
 const unitStone = ref(10000)
+const feeRate = ref(5)
 const useSeed = ref(false)
 const useFailProb = ref(false)
 const result = ref(null)
@@ -92,7 +100,7 @@ const STORAGE_KEY = 'maple-calc-inputs-v1'
 // 입력값 저장
 watch([
   type, pricePotion, priceOil, priceSeed, priceCrystal, priceStone,
-  unitPotion, unitOil, unitSeed, unitCrystal, unitStone, useSeed, useFailProb
+  unitPotion, unitOil, unitSeed, unitCrystal, unitStone, feeRate, useSeed, useFailProb
 ], () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     type: type.value,
@@ -106,6 +114,7 @@ watch([
     unitSeed: unitSeed.value,
     unitCrystal: unitCrystal.value,
     unitStone: unitStone.value,
+    feeRate: feeRate.value,
     useSeed: useSeed.value,
     useFailProb: useFailProb.value
   }))
@@ -128,6 +137,7 @@ onMounted(() => {
       unitSeed.value = data.unitSeed ?? 10000
       unitCrystal.value = data.unitCrystal ?? 10000
       unitStone.value = data.unitStone ?? 10000
+      feeRate.value = data.feeRate ?? 5
       useSeed.value = data.useSeed ?? false
       useFailProb.value = data.useFailProb ?? false
     } catch {}
@@ -142,7 +152,7 @@ const calcProfit = () => {
   const outputCount = 3 // 1회 제작 시 비약 3개 생산
 
   // 단위 환산
-  const potionPrice = pricePotion.value * unitPotion.value * outputCount
+  const potionPrice = pricePotion.value * unitPotion.value * outputCount * (1 - feeRate.value / 100)
   const oilPrice = priceOil.value * unitOil.value
   const seedPrice = priceSeed.value * unitSeed.value
   const crystalPrice = priceCrystal.value * unitCrystal.value

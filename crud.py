@@ -7,13 +7,18 @@ from sqlalchemy import func
 def create_trade(db: Session, trade: TradeCreate):
     # 입력 단위에 따라 실제 가격 계산
     real_price = trade.price * trade.price_unit
+    fee_rate = trade.fee_rate if trade.type == "sell" else 0.0
+    # 판매는 수수료 차감
+    if trade.type == "sell":
+        real_price = int(real_price * (1 - fee_rate / 100))
     db_trade = Trade(
         type=TradeType(trade.type),
         title=trade.title,
         quantity=trade.quantity,
         price=real_price,
         price_unit=trade.price_unit,
-        date=trade.date
+        date=trade.date,
+        fee_rate=fee_rate
     )
     db.add(db_trade)
     db.commit()

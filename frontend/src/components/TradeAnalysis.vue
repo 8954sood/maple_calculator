@@ -73,8 +73,8 @@ onMounted(() => {
   background: var(--form-bg, #fff);
   border-radius: 12px;
   padding: 1.2rem 1.2rem 1.2rem 1.2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  max-width: 650px;
+  box-shadow: 0 2 px 8px rgba(0,0,0,0.06);
+  min-width: 900px;
   margin: 1.2rem auto;
   font-size: 1rem;
 }
